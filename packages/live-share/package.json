@@ -1,0 +1,6 @@
+{
+    "name": "@univerjs/live-share",
+    "dependencies": {
+        "@univerjs/core": "workspace:*"
+    }
+}

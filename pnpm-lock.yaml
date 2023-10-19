@@ -670,6 +670,18 @@ importers:
         specifier: ^0.34.5
         version: 0.34.5(happy-dom@12.2.0)(less@4.2.0)
 
+  packages/collaboration:
+    dependencies:
+      '@univerjs/base-sheets':
+        specifier: workspace:*
+        version: link:../base-sheets
+      '@univerjs/core':
+        specifier: workspace:*
+        version: link:../core
+      '@wendellhu/redi':
+        specifier: ^0.12.8
+        version: 0.12.8
+
   packages/common-plugin-data:
     dependencies:
       '@univerjs/core':
@@ -734,6 +746,12 @@ importers:
       vitest:
         specifier: ^0.34.5
         version: 0.34.5(happy-dom@12.2.0)(less@4.2.0)
+
+  packages/live-share:
+    dependencies:
+      '@univerjs/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/sheets-plugin-debugger:
     dependencies:

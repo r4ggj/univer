@@ -5,10 +5,8 @@ import { Disposable, toDisposable } from '../../Shared/lifecycle';
 import { CommandService, CommandType, ICommand, ICommandInfo, ICommandService } from '../command/command.service';
 import { IUniverInstanceService } from '../instance/instance.service';
 
-// TODO:: an undo redo element may be mergeable to another undo redo element
-
 interface IUndoRedoItem {
-    /** URI maps to unitId for UniverSheet / UniverDoc / UniverSlide */
+    /** URI maps to unitId for UniverSheet / UniverDoc / UniverSlide. */
     URI: string;
 
     undo(): Promise<boolean> | boolean;
@@ -48,12 +46,10 @@ const STACK_CAPACITY = 20;
  * This UndoRedoService is local.
  */
 export class LocalUndoRedoService extends Disposable implements IUndoRedoService {
-    readonly undoRedoStatus$: Observable<IUndoRedoStatus>;
-
     private readonly _undoRedoStatus$ = new BehaviorSubject<{ undos: number; redos: number }>({ undos: 0, redos: 0 });
+    readonly undoRedoStatus$ = this._undoRedoStatus$.asObservable();
 
     private readonly _undoStacks = new Map<string, IUndoRedoItem[]>();
-
     private readonly _redoStacks = new Map<string, IUndoRedoItem[]>();
 
     constructor(
@@ -61,8 +57,6 @@ export class LocalUndoRedoService extends Disposable implements IUndoRedoService
         @ICommandService private readonly _commandService: CommandService
     ) {
         super();
-
-        this.undoRedoStatus$ = this._undoRedoStatus$.asObservable();
 
         this.disposeWithMe(this._commandService.registerCommand(UndoCommand));
         this.disposeWithMe(this._commandService.registerCommand(RedoCommand));
@@ -79,7 +73,7 @@ export class LocalUndoRedoService extends Disposable implements IUndoRedoService
         // redo stack should be cleared when pushing an undo
         redoStack.length = 0;
 
-        // TODO: undo element maybe mergeable
+        // TODO: undo element maybe merge-able
         // TODO: undo redo stack should have a maximum capacity, maybe we should get the config from IConfigService?
         undoStack.push(item);
         if (undoStack.length > STACK_CAPACITY) {

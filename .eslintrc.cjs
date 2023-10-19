@@ -9,7 +9,6 @@ module.exports = {
     extends: [
         'airbnb-base', // https://www.npmjs.com/package/eslint-config-airbnb-base
         'airbnb-typescript/base', // https://www.npmjs.com/package/eslint-config-airbnb-typescript
-        // "plugin:@typescript-eslint/recommended",// no need https://typescript-eslint.io/
         'prettier',
     ],
     parserOptions: {
@@ -55,7 +54,17 @@ module.exports = {
         'no-return-assign': 'off',
         'no-continue': 'off',
         'no-loop-func': 'off',
-        '@typescript-eslint/naming-convention': 'off',
+        '@typescript-eslint/naming-convention': [
+            'error',
+            {
+                selector: 'interface',
+                format: ['PascalCase'],
+                custom: {
+                    regex: '^I[A-Z]',
+                    match: true,
+                },
+            },
+        ],
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-loop-func': 'off',
@@ -92,13 +101,12 @@ module.exports = {
                 null: 'ignore',
             },
         ],
-        // eslint-plugin-unused-imports
         '@typescript-eslint/consistent-type-assertions': 'off',
         '@typescript-eslint/default-param-last': 'off',
         '@typescript-eslint/lines-between-class-members': 'off',
-        // '@typescript-eslint/member-ordering': 'error',
         '@typescript-eslint/no-explicit-any': 'warn',
-        '@typescript-eslint/no-redeclare': 'off', // dependency interface and dependency token share the same name
+        // dependency interface and dependency token share the same name
+        '@typescript-eslint/no-redeclare': 'off',
         '@typescript-eslint/no-unused-vars': 'warn',
         'grouped-accessor-pairs': 'off',
         'no-magic-numbers': ['warn', { ignore: [0, 1, -1, 2] }],

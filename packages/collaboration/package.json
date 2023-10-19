@@ -1,0 +1,8 @@
+{
+    "name": "@univerjs/collaboration",
+    "dependencies": {
+        "@univerjs/core": "workspace:*",
+        "@univerjs/base-sheets": "workspace:*",
+        "@wendellhu/redi": "^0.12.8"
+    }
+}

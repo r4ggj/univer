@@ -16,7 +16,7 @@ export enum PluginType {
 export abstract class Plugin {
     static type: PluginType;
 
-    protected abstract _injector: Injector;
+    protected _injector?: Injector;
 
     private _name: string;
 
