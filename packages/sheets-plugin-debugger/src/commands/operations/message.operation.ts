@@ -4,7 +4,7 @@ import { IAccessor } from '@wendellhu/redi';
 
 export const MessageOperation: ICommand = {
     id: 'debugger.operation.message',
-    type: CommandType.OPERATION,
+    type: CommandType.COMMAND,
     handler: async (accessor: IAccessor) => {
         const messageService = accessor.get(IMessageService);
         messageService.show({
