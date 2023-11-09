@@ -1011,13 +1011,12 @@ export class SpreadsheetSkeleton extends Skeleton {
         isFull: boolean = false,
         isDeepClone: boolean = false
     ): Nullable<IDocumentLayoutObject> {
-        const cell = this._cellData.getValue(row, column);
+        const cell = this._worksheet?.getCell(row, column);
         const style = this._styles.getStyleByCell(cell);
         if (!cell) {
             return;
         }
-
-        const content = cell.m || cell.v;
+        const content = cell.v;
 
         let documentModel: Nullable<DocumentModelSimple>;
         let fontString = 'document';
@@ -1276,7 +1275,7 @@ export class SpreadsheetSkeleton extends Skeleton {
             const columnCount = this._columnWidthAccumulation.length - 1;
             for (let i = startColumn; i >= endColumn; i--) {
                 const column = i;
-                const cell = this._cellData.getValue(row, column);
+                const cell = this._worksheet?.getCell(row, column);
                 if ((!isEmptyCell(cell) && column !== startColumn) || this.intersectMergeRange(row, column)) {
                     if (column === startColumn) {
                         return column;
@@ -1305,7 +1304,7 @@ export class SpreadsheetSkeleton extends Skeleton {
         }
         for (let i = startColumn; i <= endColumn; i++) {
             const column = i;
-            const cell = this._cellData.getValue(row, column);
+            const cell = this._worksheet?.getCell(row, column);
             if ((!isEmptyCell(cell) && column !== startColumn) || this.intersectMergeRange(row, column)) {
                 if (column === startColumn) {
                     return column;
