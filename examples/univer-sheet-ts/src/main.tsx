@@ -9,6 +9,7 @@ import { IUniverRPCMainThreadPluginConfig, UniverRPCMainThreadPlugin } from '@un
 // import { FindPlugin } from '@univerjs/sheets-plugin-find';
 import { FormulaPlugin } from '@univerjs/sheets-plugin-formula';
 import { FormulaUIPlugin } from '@univerjs/sheets-plugin-formula-ui';
+import { NumfmtPlugin } from '@univerjs/sheets-plugin-numfmt';
 // import { ImagePlugin } from '@univerjs/sheets-plugin-image';
 // import { ImportXlsxPlugin } from '@univerjs/sheets-plugin-import-xlsx';
 // import { NumfmtPlugin } from '@univerjs/sheets-plugin-numfmt';
@@ -41,7 +42,7 @@ univer.registerPlugin(SheetUIPlugin);
 
 // sheet feature plugins
 univer.registerPlugin(DebuggerPlugin);
-// univer.registerPlugin(NumfmtPlugin);
+univer.registerPlugin(NumfmtPlugin);
 // univer.registerPlugin(FindPlugin);
 univer.registerPlugin(FormulaPlugin);
 univer.registerPlugin(FormulaUIPlugin);
@@ -53,7 +54,6 @@ univer.registerPlugin(UniverRPCMainThreadPlugin, {
 
 // create univer sheet instance
 univer.createUniverSheet(DEFAULT_WORKBOOK_DATA_DEMO);
-
 declare global {
     interface Window {
         univer?: Univer;
