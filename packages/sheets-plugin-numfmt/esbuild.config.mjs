@@ -9,6 +9,7 @@ esbuild.build({
     entryPoints: {
         index: './src/index.ts',
         'locale/en-US': './src/locale/en-US.ts',
+        'univer-sheets-plugin-numfmt': './src/index.ts',
         'locale/zh-CN': './src/locale/zh-CN.ts',
     },
     outdir: './lib',
