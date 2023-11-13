@@ -148,6 +148,7 @@ export const SetRangeValuesMutation: IMutation<ISetRangeValuesMutationParams, bo
                 cellMatrix?.setValue(row, col, {});
             } else {
                 const oldVal = cellMatrix.getValue(row, col) || {};
+                const type = newVal.t ? newVal.t : checkCellValueType(newVal.v);
 
                 if (newVal.f !== undefined) {
                     oldVal.f = newVal.f;
@@ -163,7 +164,7 @@ export const SetRangeValuesMutation: IMutation<ISetRangeValuesMutationParams, bo
 
                 // Set to null, clear content
                 if (newVal.v !== undefined) {
-                    oldVal.v = newVal.v;
+                    oldVal.v = type === CellValueType.NUMBER ? Number(newVal.v) : newVal.v;
                     oldVal.m = String(oldVal.v);
                 }
 
@@ -174,7 +175,7 @@ export const SetRangeValuesMutation: IMutation<ISetRangeValuesMutationParams, bo
                 if (newVal.t !== undefined) {
                     oldVal.t = newVal.t;
                 } else if (oldVal.v !== undefined) {
-                    oldVal.t = checkCellValueType(oldVal.v);
+                    oldVal.t = type;
                 }
 
                 // handle style
@@ -221,6 +222,9 @@ function checkCellValueType(v: Nullable<ICellV>): Nullable<CellValueType> {
     if (v === null) return null;
 
     if (typeof v === 'string') {
+        if (isNumeric(v)) {
+            return CellValueType.NUMBER;
+        }
         return CellValueType.STRING;
     }
     if (typeof v === 'number') {
@@ -370,4 +374,8 @@ export function mergeRichTextStyle(p: IDocumentData, newStyle: Nullable<IStyleDa
             textRun.ts = merge as ITextStyle;
         }
     });
+}
+
+function isNumeric(str: string) {
+    return /^-?\d+(\.\d+)?$/.test(str);
 }
