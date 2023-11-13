@@ -4,10 +4,12 @@ import {
     Disposable,
     ICommandInfo,
     ICommandService,
+    INTERCEPTOR_POINT,
     IUniverInstanceService,
     LifecycleStages,
     makeCellToSelection,
     OnLifecycle,
+    SheetInterceptorService,
 } from '@univerjs/core';
 import { Inject } from '@wendellhu/redi';
 
@@ -32,7 +34,8 @@ export class EditorBridgeController extends Disposable {
         @IRenderManagerService private readonly _renderManagerService: IRenderManagerService,
         @IEditorBridgeService private readonly _editorBridgeService: IEditorBridgeService,
         @Inject(SelectionManagerService) private readonly _selectionManagerService: SelectionManagerService,
-        @ISelectionRenderService private readonly _selectionRenderService: ISelectionRenderService
+        @ISelectionRenderService private readonly _selectionRenderService: ISelectionRenderService,
+        @Inject(SheetInterceptorService) private _sheetInterceptorService: SheetInterceptorService
     ) {
         super();
 
@@ -101,10 +104,23 @@ export class EditorBridgeController extends Disposable {
             endX = skeleton.convertTransformToOffsetX(endX, scaleX, scrollXY);
 
             endY = skeleton.convertTransformToOffsetY(endY, scaleY, scrollXY);
+            const workbook = this._currentUniverService.getCurrentUniverSheetInstance();
+            const worksheet = workbook.getActiveSheet();
+            const location = {
+                workbook,
+                worksheet,
+                workbookId: workbook.getUnitId(),
+                worksheetId: worksheet.getSheetId(),
+                row: startRow,
+                col: startColumn,
+            };
+            const cell = this._sheetInterceptorService.fetchThroughInterceptors(INTERCEPTOR_POINT.BEFORE_CELL_EDIT)(
+                worksheet.getCell(startRow, startColumn),
+                location
+            );
+            let documentLayoutObject = cell && skeleton.getCellDocumentModel(cell, true, true);
 
-            let documentLayoutObject = skeleton.getCellDocumentModel(startRow, startColumn, true, true);
-
-            if (documentLayoutObject == null || documentLayoutObject.documentModel == null) {
+            if (!documentLayoutObject || !documentLayoutObject.documentModel) {
                 documentLayoutObject = skeleton.getBlankCellDocumentModel(startRow, startColumn, true);
             }
 
