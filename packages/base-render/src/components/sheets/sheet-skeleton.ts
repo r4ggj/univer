@@ -414,8 +414,8 @@ export class SpreadsheetSkeleton extends Skeleton {
             if (isMerged || isMergedMainCell) {
                 continue;
             }
-
-            const modelObject = this.getCellDocumentModel(rowNum, i);
+            const cell = this._worksheet?.getCell(rowNum, i);
+            const modelObject = cell && this.getCellDocumentModel(cell);
             if (modelObject == null) {
                 continue;
             }
@@ -971,7 +971,9 @@ export class SpreadsheetSkeleton extends Skeleton {
     }
 
     getBlankCellDocumentModel(row: number, column: number, isFull: boolean = false): IDocumentLayoutObject {
-        const documentModelObject = this.getCellDocumentModel(row, column);
+        const cell = this._worksheet?.getCell(row, column);
+
+        const documentModelObject = cell && this.getCellDocumentModel(cell);
 
         if (documentModelObject != null) {
             if (documentModelObject.documentModel == null) {
@@ -1006,16 +1008,12 @@ export class SpreadsheetSkeleton extends Skeleton {
     }
 
     getCellDocumentModel(
-        row: number,
-        column: number,
+        cell: ICellData,
         isFull: boolean = false,
         isDeepClone: boolean = false
     ): Nullable<IDocumentLayoutObject> {
-        const cell = this._worksheet?.getCell(row, column);
         const style = this._styles.getStyleByCell(cell);
-        if (!cell) {
-            return;
-        }
+
         const content = cell.v;
 
         let documentModel: Nullable<DocumentModelSimple>;
@@ -1464,7 +1462,7 @@ export class SpreadsheetSkeleton extends Skeleton {
             this._setBorderProps(r, c, BORDER_TYPE.RIGHT, style, cache);
         }
 
-        const modelObject = this.getCellDocumentModel(r, c);
+        const modelObject = cell && this.getCellDocumentModel(cell);
 
         if (modelObject == null) {
             return;
