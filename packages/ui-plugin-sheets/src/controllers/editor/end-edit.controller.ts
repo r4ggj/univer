@@ -1,4 +1,4 @@
-import { MoveCursorOperation, TextSelectionManagerService } from '@univerjs/base-docs';
+import { MoveCursorOperation } from '@univerjs/base-docs';
 import {
     DOCS_FORMULA_BAR_EDITOR_UNIT_ID_KEY,
     DOCS_NORMAL_EDITOR_UNIT_ID_KEY,
@@ -6,7 +6,7 @@ import {
     IPointerEvent,
     IRenderManagerService,
 } from '@univerjs/base-render';
-import { SelectionManagerService, SetRangeValuesCommand } from '@univerjs/base-sheets';
+import { SetRangeValuesCommand } from '@univerjs/base-sheets';
 import { KeyCode } from '@univerjs/base-ui';
 import {
     DEFAULT_EMPTY_DOCUMENT_VALUE,
@@ -20,12 +20,14 @@ import {
     ICommandInfo,
     ICommandService,
     IContextService,
+    INTERCEPTOR_POINT,
     isFormulaString,
     IUniverInstanceService,
     LifecycleStages,
     Nullable,
     Observer,
     OnLifecycle,
+    SheetInterceptorService,
     Tools,
 } from '@univerjs/core';
 import { Inject } from '@wendellhu/redi';
@@ -64,8 +66,7 @@ export class EndEditController extends Disposable {
         @IEditorBridgeService private readonly _editorBridgeService: IEditorBridgeService,
         @IContextService private readonly _contextService: IContextService,
         @ICellEditorManagerService private readonly _cellEditorManagerService: ICellEditorManagerService,
-        @Inject(SelectionManagerService) private readonly _selectionManagerService: SelectionManagerService,
-        @Inject(TextSelectionManagerService) private readonly _textSelectionManagerService: TextSelectionManagerService
+        @Inject(SheetInterceptorService) private readonly _sheetInterceptorService: SheetInterceptorService
     ) {
         super();
 
@@ -170,6 +171,18 @@ export class EndEditController extends Disposable {
                 }
             }
 
+            const context = {
+                worksheetId: sheetId,
+                workbookId: unitId,
+                workbook: workbook!,
+                worksheet,
+                row,
+                col: column,
+            };
+            const cell = this._sheetInterceptorService.fetchThroughInterceptors(INTERCEPTOR_POINT.AFTER_CELL_EDIT)(
+                cellData,
+                context
+            );
             this._commandService.executeCommand(SetRangeValuesCommand.id, {
                 worksheetId: sheetId,
                 workbookId: unitId,
@@ -179,7 +192,7 @@ export class EndEditController extends Disposable {
                     endRow: row,
                     endColumn: column,
                 },
-                value: cellData,
+                value: cell,
             });
         });
     }
