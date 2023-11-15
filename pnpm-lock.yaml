@@ -1062,6 +1062,9 @@ importers:
       '@univerjs/design':
         specifier: workspace:*
         version: link:../design
+      '@univerjs/icons':
+        specifier: ^0.1.7
+        version: 0.1.7(react-dom@18.2.0)(react@18.2.0)
       '@wendellhu/redi':
         specifier: ^0.12.11
         version: 0.12.11
@@ -1071,6 +1074,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@storybook/addon-docs':
         specifier: ^7.5.2
