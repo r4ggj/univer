@@ -1065,6 +1065,9 @@ importers:
       '@univerjs/icons':
         specifier: ^0.1.7
         version: 0.1.7(react-dom@18.2.0)(react@18.2.0)
+      '@univerjs/ui-plugin-sheets':
+        specifier: workspace:*
+        version: link:../ui-plugin-sheets
       '@wendellhu/redi':
         specifier: ^0.12.11
         version: 0.12.11
