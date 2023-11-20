@@ -3,17 +3,14 @@ import { Dropdown, Tooltip } from '@univerjs/design';
 import { MoreDownSingle } from '@univerjs/icons';
 import { useDependency } from '@wendellhu/redi/react-bindings';
 import { useEffect, useState } from 'react';
-import { isObservable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { CustomLabel } from '../../../components/custom-label/CustomLabel';
-import { useObservable } from '../../../components/hooks/observable';
 import { Menu } from '../../../components/menu/Menu';
 import {
-    ICustomComponentOption,
     IDisplayMenuItem,
     IMenuItem,
     IMenuSelectorItem,
-    isValueOptions,
     IValueOption,
     MenuItemType,
 } from '../../../services/menu/menu';
@@ -71,15 +68,8 @@ export function ToolbarItem(props: IDisplayMenuItem<IMenuItem>) {
     function renderSelectorType() {
         const { selections } = props as IDisplayMenuItem<IMenuSelectorItem>;
 
-        let options: Array<IValueOption | ICustomComponentOption>;
-        if (isObservable(selections)) {
-            options = useObservable<Array<IValueOption | ICustomComponentOption>>(selections || of([]), [], true);
-        } else {
-            options = selections || [];
-        }
-
-        const item = options?.find((o) => isValueOptions(o) && o.value === value) as IValueOption | undefined;
-        const iconToDisplay = item?.icon ?? icon;
+        const options = selections as IValueOption[];
+        const iconToDisplay = options?.find((o) => o.value === value)?.icon ?? icon;
 
         function handleSelect(option: IValueOption) {
             let commandId = id;
@@ -124,7 +114,7 @@ export function ToolbarItem(props: IDisplayMenuItem<IMenuItem>) {
                 onClick={() => commandService.executeCommand(props.id)}
                 onDoubleClick={() => props.subId && commandService.executeCommand(props.subId)}
             >
-                <CustomLabel icon={icon} />
+                <CustomLabel icon={icon} title={title!} value={value} label={label} />
             </ToolbarButton>
         );
     }
